@@ -1,5 +1,4 @@
 import { directions } from "./interfaces.js";
-import { Bala } from "./Bala.js";
 import { WIDTH, BALASPEED } from "./config.js";
 export class Destructor {
     xPos; // Posició horitzontal de la nau
@@ -48,8 +47,7 @@ export class Destructor {
      * La bala sale desde la punta de la nave y se mueve hacia arriba.
      * Si la bala sale de la pantalla, se elimina.
      */
-    disparar() {
-        let bala = new Bala();
+    disparar(bala) {
         bala.setxPos((this.xPos - this.getNauWidth() / 2) + 5);
         bala.setyPos(this.yPos - this.getNauHeight());
         let balaInterval = setInterval(() => {

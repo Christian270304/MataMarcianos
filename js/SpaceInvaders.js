@@ -2,6 +2,7 @@ import "https://code.jquery.com/jquery-3.7.1.js";
 import { Destructor } from "./Destructor.js";
 import { Exercit } from "./Exercit.js";
 import { directions } from "./interfaces.js";
+import { Bala } from "./Bala.js";
 ///////////////////////////////////////////////////////////
 // Alumnes: Christian Torres y Daniela Gamez
 ///////////////////////////////////////////////////////////
@@ -13,8 +14,11 @@ function init() {
     // Crear la nau i l'exèrcit dels aliens
     let destructor = new Destructor();
     let exercit = new Exercit();
+    let bala = new Bala();
     nauMovement(destructor);
-    disparar(destructor);
+    disparar(destructor, bala);
+    alienDestruction(exercit);
+    setInterval(alienDestruction, 16);
 }
 /**
  * Asigna los eventos para el movimiento de la nave.
@@ -70,18 +74,18 @@ function handleMovement(destructor, pressedKeys) {
  *
  * @param destructor Destructor desde el que se va a disparar la bala.
  */
-function disparar(destructor) {
+function disparar(destructor, bala) {
     $(document)
         .on('click', () => {
-        let bala = document.getElementById("bala");
-        if (!bala)
-            destructor.disparar();
+        let b = document.getElementById("bala");
+        if (!b)
+            destructor.disparar(bala);
     })
         .on('keydown', (event) => {
         if (event.code === 'Space' || event.code === 'Enter') {
-            let bala = document.getElementById("bala");
-            if (!bala)
-                destructor.disparar();
+            let b = document.getElementById("bala");
+            if (!b)
+                destructor.disparar(bala);
         }
         ;
     })
@@ -90,9 +94,26 @@ function disparar(destructor) {
             // Prevenir el menú contextual si Shift no está presionado
             event.preventDefault();
             // Disparar al hacer clic derecho sin Shift
-            const bala = document.getElementById("bala");
-            if (!bala)
-                destructor.disparar();
+            const b = document.getElementById("bala");
+            if (!b)
+                destructor.disparar(bala);
+        }
+    });
+}
+function alienDestruction(exercit) {
+    const bala = document.querySelector("#bala"); // Seleccionamos el elemento bala correctamente con tipo
+    if (!bala)
+        return;
+    $("use[id^='a']").each((i, e) => {
+        const alienRect = e.getBoundingClientRect();
+        const balaRect = bala.getBoundingClientRect();
+        const collision = !(balaRect.right < alienRect.left ||
+            balaRect.left > alienRect.right ||
+            balaRect.bottom < alienRect.top ||
+            balaRect.top > alienRect.bottom);
+        if (collision) {
+            e.remove();
+            bala.remove();
         }
     });
 }

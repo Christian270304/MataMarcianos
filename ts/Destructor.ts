@@ -57,8 +57,8 @@ export class Destructor {
 	 * La bala sale desde la punta de la nave y se mueve hacia arriba.
 	 * Si la bala sale de la pantalla, se elimina.
 	 */
-	public disparar() {
-		let bala = new Bala();
+	public disparar(bala: Bala) {
+
 		bala.setxPos((this.xPos-this.getNauWidth()/2) + 5);
 		bala.setyPos(this.yPos-this.getNauHeight());
 		

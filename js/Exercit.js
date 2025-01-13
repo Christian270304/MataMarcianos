@@ -1,3 +1,4 @@
+import "https://code.jquery.com/jquery-3.7.1.js";
 import { ALIENS, COLUMNES, FILES } from "./config.js";
 export class Exercit {
     xPos; // Posició horitzontal de l'exèrcit d'aliens
@@ -20,6 +21,19 @@ export class Exercit {
                 this.exercit.innerHTML += "<use id='a" + i + j + "' href='#alien' transform='translate(" + (j * 60 + 40) + " " + (i * 40 + 30) + ")'></use>";
             }
         }
+    }
+    getAlien(i, j) {
+        return document.getElementById("a" + i + j);
+    }
+    getAlienPos(i, j) {
+        let transform = this.getAlien(i, j).getAttribute("transform");
+        if (transform) {
+            let pos = transform.match(/translate\((\d+) (\d+)\)/);
+            if (pos) {
+                return { x: parseInt(pos[1]), y: parseInt(pos[2]) };
+            }
+        }
+        return null;
     }
 }
 //# sourceMappingURL=Exercit.js.map
