@@ -24,16 +24,43 @@ function init() {
  * @param destructor Destructor que se va a mover.
  */
 function nauMovement(destructor) {
+    let pressedKeys = new Set();
+    let movementInterval = null;
     $(document)
         .on('mousemove', (e) => {
         destructor.setxPos(e.clientX);
     })
         .on('keydown', (event) => {
-        if (event.code === 'KeyA' || event.code === 'ArrowLeft')
-            destructor.moveNau(directions.LEFT);
-        if (event.code === 'KeyD' || event.code === 'ArrowRight')
-            destructor.moveNau(directions.RIGHT);
+        pressedKeys.add(event.code);
+        if (!movementInterval) {
+            // Inicia el movimiento continuo si no hay un intervalo en ejecución
+            movementInterval = setInterval(() => {
+                handleMovement(destructor, pressedKeys);
+            }, 30);
+        }
+    })
+        .on('keyup', (event) => {
+        pressedKeys.delete(event.code);
+        // Detener el movimiento si no hay teclas relevantes presionadas
+        if (pressedKeys.size === 0 && movementInterval !== null) {
+            clearInterval(movementInterval);
+            movementInterval = null;
+        }
     });
+}
+function handleMovement(destructor, pressedKeys) {
+    const leftPressed = pressedKeys.has('KeyA') || pressedKeys.has('ArrowLeft');
+    const rightPressed = pressedKeys.has('KeyD') || pressedKeys.has('ArrowRight');
+    // Si ambas teclas están presionadas, no hacer nada
+    if (leftPressed && rightPressed)
+        return;
+    // Mueve la nave en la dirección correspondiente
+    if (leftPressed) {
+        destructor.moveNau(directions.LEFT);
+    }
+    else if (rightPressed) {
+        destructor.moveNau(directions.RIGHT);
+    }
 }
 /**
  * Asigna los eventos para disparar una bala desde la nave.

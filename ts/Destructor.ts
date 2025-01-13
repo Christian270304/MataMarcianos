@@ -33,18 +33,22 @@ export class Destructor {
 	/**
 	 * Mueve la nave en la dirección especificada.
 	 * 
-	 * @param direction Dirección en la que se debe mover la nave.
-	 *                  Debe ser una de las constantes definidas en la interfaz directions.
+	 * El movimiento es relativo, es decir, la nave se mueve 15 píxeles en la dirección
+	 * especificada. Si la nave está en el borde de la pantalla, se mantiene en la
+	 * posición actual.
+	 * 
+	 * @param {directions} direction Dirección en la que se va a mover la nave.
 	 */
 	public moveNau(direction: directions) {
 		// Calcula la nueva posición provisionalmente
-		const newXPos = this.xPos + (direction === directions.RIGHT ? 30 : -30);
+		const newXPos = this.xPos + (direction === directions.RIGHT ? 15 : -15);
 	
 		// Restringe el valor entre 0 y el WIDTH del area de juego
 		this.xPos = Math.max(0 + this.getNauWidth(), Math.min(newXPos, WIDTH - this.getNauWidth()));
 	
 		// Actualiza la posición transformada de la nave
 		this.nau.setAttribute("transform", `translate(${this.xPos} ${this.yPos})`);
+		this.nau.style.transition = "transform 0.1s ease-out";
 	}
 	
 

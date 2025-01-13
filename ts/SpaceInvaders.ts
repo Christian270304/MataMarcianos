@@ -31,14 +31,46 @@ function init() {
  * @param destructor Destructor que se va a mover.
  */
 function nauMovement(destructor:Destructor) {
+	let pressedKeys = new Set<string>();
+	let movementInterval: number | null = null;
 	$(document)
 	.on('mousemove',(e:MouseEvent)=>{
 		destructor.setxPos(e.clientX);
 	})
-	.on('keydown', (event:KeyboardEvent) =>{
-		if (event.code === 'KeyA' || event.code === 'ArrowLeft') destructor.moveNau(directions.LEFT);
-		if (event.code === 'KeyD' || event.code === 'ArrowRight') destructor.moveNau(directions.RIGHT);
+	.on('keydown', (event: KeyboardEvent) => {
+		pressedKeys.add(event.code);
+
+		if (!movementInterval) {
+			// Inicia el movimiento continuo si no hay un intervalo en ejecución
+			movementInterval = setInterval(() => {
+				handleMovement(destructor,pressedKeys);
+			}, 30); 
+		}
+	})
+	.on('keyup', (event: KeyboardEvent) => {
+		pressedKeys.delete(event.code);
+
+		// Detener el movimiento si no hay teclas relevantes presionadas
+		if (pressedKeys.size === 0 && movementInterval !== null) {
+			clearInterval(movementInterval);
+			movementInterval = null;
+		}
 	});
+}
+
+function handleMovement(destructor: Destructor, pressedKeys: Set<string>) {
+    const leftPressed = pressedKeys.has('KeyA') || pressedKeys.has('ArrowLeft');
+    const rightPressed = pressedKeys.has('KeyD') || pressedKeys.has('ArrowRight');
+
+    // Si ambas teclas están presionadas, no hacer nada
+    if (leftPressed && rightPressed) return;
+
+    // Mueve la nave en la dirección correspondiente
+    if (leftPressed) {
+        destructor.moveNau(directions.LEFT);
+    } else if (rightPressed) {
+        destructor.moveNau(directions.RIGHT);
+    }
 }
 
 /**
