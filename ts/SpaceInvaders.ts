@@ -19,12 +19,12 @@ function init() {
 	let destructor = new Destructor();
 	let exercit = new Exercit();
 	let bala = new Bala();
-
+	exercit.startMoviment();
 	nauMovement(destructor);
 	disparar(destructor);
 
 	alienDestruction(exercit);
-	setInterval(alienDestruction, 16);
+	setInterval(alienDestruction, 20);
 
 }
 

@@ -54,7 +54,7 @@ export class Destructor {
         bala.setyPos(this.yPos - this.getNauHeight());
         let balaInterval = setInterval(() => {
             bala.setyPos(bala.getyPos() - BALASPEED);
-            if (bala.getyPos() < 0 + bala.getBalaHeight()) {
+            if (bala.getyPos() <= 0 + bala.getBalaHeight()) {
                 clearInterval(balaInterval);
                 document.getElementById("joc").removeChild(bala.getBala());
             }
