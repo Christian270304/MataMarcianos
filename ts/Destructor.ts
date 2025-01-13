@@ -8,6 +8,14 @@ export class Destructor {
 	private nauHeight: number;
 	private nau: SVGPathElement;
 
+	
+	/**
+	 * Constructor de la clase Destructor.
+	 * 
+	 * Inicializa la posición de la nave en el centro de la pantalla y
+	 * la situa la altura correspondiente.
+	 * 
+	 */
 	constructor() {
 		// Inicialitzar valors
 		this.xPos = 320; // Posició horitzontal de la nau
@@ -22,6 +30,12 @@ export class Destructor {
 		this.nauHeight = this.nau.getBBox().height;
 	}
 
+	/**
+	 * Mueve la nave en la dirección especificada.
+	 * 
+	 * @param direction Dirección en la que se debe mover la nave.
+	 *                  Debe ser una de las constantes definidas en la interfaz directions.
+	 */
 	public moveNau(direction: directions) {
 		// Calcula la nueva posición provisionalmente
 		const newXPos = this.xPos + (direction === directions.RIGHT ? 30 : -30);
@@ -34,6 +48,11 @@ export class Destructor {
 	}
 	
 
+	/**
+	 * Lanza una bala desde la nave actual.
+	 * La bala sale desde la punta de la nave y se mueve hacia arriba.
+	 * Si la bala sale de la pantalla, se elimina.
+	 */
 	public disparar() {
 		let bala = new Bala();
 		bala.setxPos((this.xPos-this.getNauWidth()/2) + 5);
@@ -49,6 +68,11 @@ export class Destructor {
 		document.getElementById("joc")!.appendChild(bala.getBala());
 	}
 
+	/**
+	 * Establece la posición horizontal de la nave en el valor especificado por parámetro.
+	 * No permite que la nave se salga de la pantalla.
+	 * @param xpos Nueva posición horizontal de la nave.
+	 */
 	setxPos(xpos:number) {
 		if (xpos < 0 + this.getNauWidth()) return;
 		if (xpos > 640 - this.getNauWidth()) return;

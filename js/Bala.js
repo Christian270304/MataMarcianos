@@ -5,6 +5,16 @@ export class Bala {
     balaWidth;
     balaHeight;
     bala;
+    /**
+     * Constructor de la clase Bala.
+     *
+     * @param {number} [x=320] Posicion horizontal de la bala.
+     * @param {number} [y=434] Posicion vertical de la bala.
+     *
+     * Crea un elemento <g> con id "bala" y establece su
+     * posicion y escala segun los parametros.
+     *
+    */
     constructor(x = 320, y = 434) {
         this.bala = this.createBalaElement();
         this.balaWidth = this.bala.getBBox().width;
@@ -13,6 +23,12 @@ export class Bala {
         this.yPos = y;
         this.bala.setAttribute("transform", `translate(${this.xPos} ${this.yPos}),scale(${BALASCALE})`);
     }
+    /**
+     * Crea un elemento <g> con id "bala" y devuelve la referencia a este.
+     * El elemento <g> contiene dos <path>
+     *
+     * @returns {SVGGElement} Elemento <g> con la bala
+     */
     createBalaElement() {
         // Crear el elemento <g> con id "bala"
         const gElement = document.createElementNS("http://www.w3.org/2000/svg", "g");

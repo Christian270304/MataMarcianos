@@ -8,6 +8,11 @@ import { directions } from "./interfaces.js";
 // Alumnes: Christian Torres y Daniela Gamez
 ///////////////////////////////////////////////////////////
 
+/**
+ * Inicializa el juego Space Invaders creando la nave y el ejército de aliens,
+ * y asigna los eventos necesarios para el movimiento de la nave y el disparo de balas.
+ */
+
 function init() {
 	// Crear la nau i l'exèrcit dels aliens
 	let destructor = new Destructor();
@@ -18,6 +23,13 @@ function init() {
 	
 }
 
+/**
+ * Asigna los eventos para el movimiento de la nave.
+ * 
+ * El movimiento de la nave se puede realizar con el ratón o con las teclas 'A' y 'D' o con las flechas izquierda y derecha.
+ * 
+ * @param destructor Destructor que se va a mover.
+ */
 function nauMovement(destructor:Destructor) {
 	$(document)
 	.on('mousemove',(e:MouseEvent)=>{
@@ -29,6 +41,14 @@ function nauMovement(destructor:Destructor) {
 	});
 }
 
+/**
+ * Asigna los eventos para disparar una bala desde la nave.
+ * 
+ * Al hacer clic en cualquier lugar de la pantalla, presionar la tecla 'Space' o 'Enter', o hacer clic derecho sin presionar la tecla 'Shift',
+ * se dispara una bala desde la nave actual, siempre y cuando no haya otra bala en el área de juego.
+ * 
+ * @param destructor Destructor desde el que se va a disparar la bala.
+ */
 function disparar(destructor:Destructor) {
 	
 	$(document)
