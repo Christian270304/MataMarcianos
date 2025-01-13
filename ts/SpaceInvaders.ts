@@ -21,7 +21,7 @@ function init() {
 	let bala = new Bala();
 
 	nauMovement(destructor);
-	disparar(destructor, bala);
+	disparar(destructor);
 
 	alienDestruction(exercit);
 	setInterval(alienDestruction, 16);
@@ -86,17 +86,17 @@ function handleMovement(destructor: Destructor, pressedKeys: Set<string>) {
  * 
  * @param destructor Destructor desde el que se va a disparar la bala.
  */
-function disparar(destructor: Destructor, bala: Bala) {
+function disparar(destructor: Destructor) {
 
 	$(document)
 		.on('click', () => {
 			let b = document.getElementById("bala") as unknown as SVGGElement;
-			if (!b) destructor.disparar(bala);
+			if (!b) destructor.disparar();
 		})
 		.on('keydown', (event: KeyboardEvent) => {
 			if (event.code === 'Space' || event.code === 'Enter') {
 				let b = document.getElementById("bala") as unknown as SVGGElement;
-				if (!b) destructor.disparar(bala);
+				if (!b) destructor.disparar();
 			};
 		})
 		.on('contextmenu', (event: MouseEvent) => {
@@ -106,7 +106,7 @@ function disparar(destructor: Destructor, bala: Bala) {
 
 				// Disparar al hacer clic derecho sin Shift
 				const b = document.getElementById("bala") as unknown as SVGGElement;
-				if (!b) destructor.disparar(bala);
+				if (!b) destructor.disparar();
 			}
 		});
 }
