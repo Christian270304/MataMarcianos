@@ -1,6 +1,6 @@
 import { directions } from "./interfaces.js";
 import { Bala } from "./Bala.js";
-import { WIDTH } from "./config.js";
+import { WIDTH, BALASPEED } from "./config.js";
 export class Destructor {
 	private xPos: number;	// Posició horitzontal de la nau
 	private yPos: number;	// Posició vertical de la nau
@@ -40,15 +40,12 @@ export class Destructor {
 		bala.setyPos(this.yPos-this.getNauHeight());
 		
 		let balaInterval = setInterval(() => {
-			bala.setyPos(bala.getyPos() - 10);
+			bala.setyPos(bala.getyPos() - BALASPEED);
 			if (bala.getyPos() < 0 + bala.getBalaHeight()) {
 				clearInterval(balaInterval);
 				document.getElementById("joc")!.removeChild(bala.getBala());
 			}
-		}, 100);
-
-		
-		
+		}, 50);
 		document.getElementById("joc")!.appendChild(bala.getBala());
 	}
 
