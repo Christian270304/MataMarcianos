@@ -18,14 +18,12 @@ function init() {
 	// Crear la nau i l'exèrcit dels aliens
 	let destructor = new Destructor();
 	let exercit = new Exercit();
-	let bala = new Bala();
+
 	exercit.startMoviment();
 	nauMovement(destructor);
 	disparar(destructor);
-
-	alienDestruction(exercit);
+	alienDestruction();
 	setInterval(alienDestruction, 20);
-
 }
 
 /**
@@ -111,10 +109,11 @@ function disparar(destructor: Destructor) {
 		});
 }
 
-function alienDestruction(exercit: Exercit): void {
-    const bala = document.querySelector<SVGGElement>("#bala"); // Seleccionamos el elemento bala correctamente con tipo
-    if (!bala) return;
-
+function alienDestruction(): void {
+    const bala = document.querySelector<SVGGElement>("#bala"); 
+	
+	if (!bala) return;
+	
     $("use[id^='a']").each((i: number, e: SVGAElement) => {
         const alienRect = e.getBoundingClientRect();
         const balaRect = bala.getBoundingClientRect();
@@ -129,9 +128,15 @@ function alienDestruction(exercit: Exercit): void {
         if (collision) {
             e.remove();
 			bala.remove();
-        }
+        } 
+		
     });
 }
+
+
+	
+
+
 
 
 init();

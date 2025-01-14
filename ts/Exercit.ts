@@ -51,7 +51,7 @@ export class Exercit {
 	}
 	
 	
-	private aliensMoviment() {
+	public aliensMoviment() {
 		let newYPos:number = this.yPos;
 
 		if (this.xPos + this.exercit.getBBox().width >= WIDTH) {
@@ -60,10 +60,10 @@ export class Exercit {
 			this.direction = 1; // Canviar la direcció a dreta
 		}
 		
-		let newXPos = this.xPos + 10 * this.direction;
+		let newXPos = this.xPos + 20 * this.direction;
 
-		if (this.yPos + this.exercit.getBBox().height <= HEIGHT) {
-			newYPos = this.yPos + 1;
+		if (this.yPos + this.exercit.getBBox().height <= (HEIGHT)-5) {
+			newYPos = this.yPos + 5;
 		}
 
 		this.xPos = Math.max(0, Math.min(newXPos, WIDTH - this.getAliensWidth()));
@@ -71,7 +71,35 @@ export class Exercit {
 
 		this.exercit.setAttribute("transform", `translate(${this.xPos} ${this.yPos})`);
 		this.exercit.style.transition = "transform 0.1s ease-out";
+
+
+		const allAliens = document.getElementById('aliens') as unknown as SVGGElement;
+		const nave = document.querySelector<SVGGElement>("#nau"); 
+		if (!nave) throw new Error("Nave no encontrada");
+		const naveRect = nave.getBoundingClientRect();
+		console.log(naveRect);
+		$("use[id^='a']").each((i: number, e: SVGAElement) => {
+			const alienRect = e.getBoundingClientRect();
+			
+
+			const collisionNave = !(
+				alienRect.right < naveRect.left ||
+				alienRect.left > naveRect.right ||
+				alienRect.bottom < naveRect.top ||
+				alienRect.top > naveRect.bottom
+			);
+			
+
+			if (collisionNave || alienRect.bottom >= HEIGHT) {
+				allAliens.remove();
+				nave.remove();
+				gameOver();
+
+			}
+		});
 	}
+	
+	
 
 	public startMoviment() {
 		setInterval(() => {
@@ -94,4 +122,40 @@ export class Exercit {
     getxPos() {
         return this.xPos;
     }
+}
+
+function gameOver(): void {
+	// Crear texto de Game Over
+	const textGameOver = document.createElementNS("http://www.w3.org/2000/svg", "text");
+	textGameOver.setAttribute("x", "50%");
+	textGameOver.setAttribute("y", "50%");
+	textGameOver.setAttribute("font-size", "24");
+	textGameOver.setAttribute("fill", "red");
+	textGameOver.setAttribute("text-anchor", "middle");
+	textGameOver.textContent = "GAME OVER";
+	document.getElementById("joc")!.appendChild(textGameOver);
+
+	// Reproducir sonido de Game Over
+	const audio = new Audio("sounds/gameover.mp3");
+	audio.play();
+
+	// Crear botón de Replay
+    const replayButton = document.createElement("button");
+	const svg = document.querySelector<SVGElement>("svg")!;
+    
+	const svgRect = svg.getBoundingClientRect();
+	replayButton.style.position = "absolute";
+	replayButton.style.zIndex = "5";
+	replayButton.style.fontSize = "24px";
+	replayButton.style.color = "red";
+	replayButton.style.transform = "translate(-50%, 30%)";
+	replayButton.style.left = `${svgRect.left + svgRect.width / 2}px`;
+	replayButton.style.top = `${svgRect.top + svgRect.height / 2}px`;
+	replayButton.style.display = "block";
+	replayButton.textContent = "Replay";
+	replayButton.onclick = () => {
+		location.reload();
+	};
+    document.body.appendChild(replayButton);
+
 }

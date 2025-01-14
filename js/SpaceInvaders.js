@@ -2,7 +2,6 @@ import "https://code.jquery.com/jquery-3.7.1.js";
 import { Destructor } from "./Destructor.js";
 import { Exercit } from "./Exercit.js";
 import { directions } from "./interfaces.js";
-import { Bala } from "./Bala.js";
 ///////////////////////////////////////////////////////////
 // Alumnes: Christian Torres y Daniela Gamez
 ///////////////////////////////////////////////////////////
@@ -14,11 +13,10 @@ function init() {
     // Crear la nau i l'exèrcit dels aliens
     let destructor = new Destructor();
     let exercit = new Exercit();
-    let bala = new Bala();
     exercit.startMoviment();
     nauMovement(destructor);
     disparar(destructor);
-    alienDestruction(exercit);
+    alienDestruction();
     setInterval(alienDestruction, 20);
 }
 /**
@@ -101,8 +99,8 @@ function disparar(destructor) {
         }
     });
 }
-function alienDestruction(exercit) {
-    const bala = document.querySelector("#bala"); // Seleccionamos el elemento bala correctamente con tipo
+function alienDestruction() {
+    const bala = document.querySelector("#bala");
     if (!bala)
         return;
     $("use[id^='a']").each((i, e) => {
