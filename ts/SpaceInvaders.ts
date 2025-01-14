@@ -112,7 +112,7 @@ function disparar(destructor: Destructor) {
 		});
 }
 
-function alienDestruction(exercit: Exercit): void {
+function alienDestruction(): void {
 	const bala = document.querySelector<SVGGElement>("#bala"); // Seleccionamos el elemento bala correctamente con tipo
 	if (!bala) return;
 
