@@ -72,7 +72,10 @@ function nauMovement(destructor: Destructor) {
 	let movementInterval: number | null = null;
 	$(document)
 		.on('mousemove', (e: MouseEvent) => {
-			destructor.setxPos(e.clientX);
+			const joc = $('#joc')[0] as SVGGElement;
+			const jocRect = joc.getBoundingClientRect();
+			const relativeX = e.clientX - jocRect.left;
+			destructor.setxPos(relativeX);
 		})
 		.on('keydown', (event: KeyboardEvent) => {
 			pressedKeys.add(event.code);
@@ -143,16 +146,22 @@ function startAliensMovement(aliens: Exercit) {
  */
 
 function disparar(destructor: Destructor) {
-
+	
+	
 	$(document)
 		.on('click', () => {
 			let b = document.getElementById("bala") as unknown as SVGGElement;
-			if (!b) destructor.disparar();
+			const aliens = document.getElementById("aliens") as unknown as SVGGElement;
+			
+			if (!b && aliens) destructor.disparar();
+		
 		})
 		.on('keydown', (event: KeyboardEvent) => {
 			if (event.code === 'Space' || event.code === 'Enter') {
 				let b = document.getElementById("bala") as unknown as SVGGElement;
-				if (!b) destructor.disparar();
+				const aliens = document.getElementById("aliens") as unknown as SVGGElement;
+			
+				if (!b && aliens) destructor.disparar();
 			};
 		})
 		.on('contextmenu', (event: MouseEvent) => {
@@ -162,7 +171,9 @@ function disparar(destructor: Destructor) {
 
 				// Disparar al hacer clic derecho sin Shift
 				const b = document.getElementById("bala") as unknown as SVGGElement;
-				if (!b) destructor.disparar();
+				const aliens = document.getElementById("aliens") as unknown as SVGGElement;
+			
+				if (!b && aliens) destructor.disparar();
 			}
 		});
 }
@@ -267,9 +278,9 @@ $(document).ready(function () {
 	};
 
 	// Generate stars: small, medium, and big
-	generateStars(700, 'small');
-	generateStars(100, 'medium');
-	generateStars(50, 'big');
+	//generateStars(700, 'small');
+	//generateStars(100, 'medium');
+	//generateStars(50, 'big');
 });
 
 init();

@@ -58,7 +58,10 @@ function nauMovement(destructor) {
     let movementInterval = null;
     $(document)
         .on('mousemove', (e) => {
-        destructor.setxPos(e.clientX);
+        const joc = $('#joc')[0];
+        const jocRect = joc.getBoundingClientRect();
+        const relativeX = e.clientX - jocRect.left;
+        destructor.setxPos(relativeX);
     })
         .on('keydown', (event) => {
         pressedKeys.add(event.code);
@@ -124,13 +127,15 @@ function disparar(destructor) {
     $(document)
         .on('click', () => {
         let b = document.getElementById("bala");
-        if (!b)
+        const aliens = document.getElementById("aliens");
+        if (!b && aliens)
             destructor.disparar();
     })
         .on('keydown', (event) => {
         if (event.code === 'Space' || event.code === 'Enter') {
             let b = document.getElementById("bala");
-            if (!b)
+            const aliens = document.getElementById("aliens");
+            if (!b && aliens)
                 destructor.disparar();
         }
         ;
@@ -141,7 +146,8 @@ function disparar(destructor) {
             event.preventDefault();
             // Disparar al hacer clic derecho sin Shift
             const b = document.getElementById("bala");
-            if (!b)
+            const aliens = document.getElementById("aliens");
+            if (!b && aliens)
                 destructor.disparar();
         }
     });
@@ -228,9 +234,9 @@ $(document).ready(function () {
         }
     };
     // Generate stars: small, medium, and big
-    generateStars(700, 'small');
-    generateStars(100, 'medium');
-    generateStars(50, 'big');
+    //generateStars(700, 'small');
+    //generateStars(100, 'medium');
+    //generateStars(50, 'big');
 });
 init();
 //# sourceMappingURL=SpaceInvaders.js.map

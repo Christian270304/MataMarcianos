@@ -5,5 +5,6 @@ const WIDTH = 640;	// Amplada de l'àrea de joc
 const HEIGHT = 480;	// Alçada de l'àrea de joc
 const BALASCALE = 0.1;
 const BALASPEED = 25;
+const ALIENSPEED = 1;
 
-export { FILES, COLUMNES, ALIENS, WIDTH, HEIGHT, BALASCALE, BALASPEED };
+export { FILES, COLUMNES, ALIENS, WIDTH, HEIGHT, BALASCALE, BALASPEED, ALIENSPEED };
