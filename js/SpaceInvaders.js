@@ -6,9 +6,9 @@ import { directions } from "./interfaces.js";
 // Alumnes: Christian Torres y Daniela Gamez
 ///////////////////////////////////////////////////////////
 /**
- * Inicializa el juego Space Invaders creando la nave y el ejército de aliens,
- * y asigna los eventos necesarios para el movimiento de la nave y el disparo de balas.
- */
+ * Inicializa el juego Space Invaders creando el botón de "Start" y asignando el
+ * evento de click para iniciar el juego.
+ * */
 function init() {
     const svg = $("svg");
     const svgRect = svg[0].getBoundingClientRect();
@@ -37,11 +37,10 @@ function initGame() {
     const audio = new Audio("sounds/spaceinvaders.mpeg");
     audio.loop = true;
     audio.play();
-    // Crear la nau i l'exèrcit dels aliens
     $("#nau").css("display", "block");
     let destructor = new Destructor();
     let exercit = new Exercit();
-    exercit.startMoviment();
+    startAliensMovement(exercit);
     nauMovement(destructor);
     disparar(destructor);
     alienDestruction();
@@ -64,7 +63,6 @@ function nauMovement(destructor) {
         .on('keydown', (event) => {
         pressedKeys.add(event.code);
         if (!movementInterval) {
-            // Inicia el movimiento continuo si no hay un intervalo en ejecución
             movementInterval = setInterval(() => {
                 handleMovement(destructor, pressedKeys);
             }, 30);
@@ -72,20 +70,27 @@ function nauMovement(destructor) {
     })
         .on('keyup', (event) => {
         pressedKeys.delete(event.code);
-        // Detener el movimiento si no hay teclas relevantes presionadas
         if (pressedKeys.size === 0 && movementInterval !== null) {
             clearInterval(movementInterval);
             movementInterval = null;
         }
     });
 }
+/**
+ * Maneja el movimiento de la nave en función de las teclas presionadas.
+ *
+ * Verifica si se ha presionado alguna de las teclas de movimiento (A, D, Flecha izquierda o Flecha derecha)
+ * y en caso de que se haya presionado alguna, mueve la nave en esa dirección.
+ * Si se han presionado las dos teclas de movimiento, no se hace nada.
+ *
+ * @param destructor Destructor que se va a mover.
+ * @param pressedKeys Conjunto de teclas presionadas.
+ */
 function handleMovement(destructor, pressedKeys) {
     const leftPressed = pressedKeys.has('KeyA') || pressedKeys.has('ArrowLeft');
     const rightPressed = pressedKeys.has('KeyD') || pressedKeys.has('ArrowRight');
-    // Si ambas teclas están presionadas, no hacer nada
     if (leftPressed && rightPressed)
         return;
-    // Mueve la nave en la dirección correspondiente
     if (leftPressed) {
         destructor.moveNau(directions.LEFT);
     }
@@ -94,12 +99,26 @@ function handleMovement(destructor, pressedKeys) {
     }
 }
 /**
+ * Inicia el movimiento continuo de los aliens.
+ *
+ * Utiliza un intervalo para mover el ejército de aliens
+ * continuamente en la dirección actual determinada por el objeto Exercit.
+ *
+ * @param aliens Instancia de Exercit que representa el ejército de aliens.
+ */
+function startAliensMovement(aliens) {
+    setInterval(() => {
+        aliens.aliensMoviment();
+    }, 100);
+}
+/**
  * Asigna los eventos para disparar una bala desde la nave.
  *
- * Al hacer clic en cualquier lugar de la pantalla, presionar la tecla 'Space' o 'Enter', o hacer clic derecho sin presionar la tecla 'Shift',
- * se dispara una bala desde la nave actual, siempre y cuando no haya otra bala en el área de juego.
+ * La bala se dispara cuando se hace clic, se presiona la barra espaciadora
+ * o la tecla Enter. También se puede disparar haciendo clic derecho
+ * cuando la tecla Shift no está presionada.
  *
- * @param destructor Destructor desde el que se va a disparar la bala.
+ * @param destructor Instancia de Destructor que lanza las balas.
  */
 function disparar(destructor) {
     $(document)
@@ -127,6 +146,11 @@ function disparar(destructor) {
         }
     });
 }
+/**
+ * Comprueba si la bala ha chocado con algún alien y en caso de que así sea,
+ * elimina la bala y el alien que ha chocado y reproduce el sonido de destrucción del alien.
+ *
+ */
 function alienDestruction() {
     const bala = $("#bala")[0]; // Seleccionamos el elemento bala con jQuery y aseguramos el tipo
     if (!bala)
@@ -146,6 +170,11 @@ function alienDestruction() {
         }
     });
 }
+/**
+ * Finaliza el juego mostrando un mensaje de "GAME OVER" en el centro de la pantalla y
+ * reproduciendo un sonido asociado. También genera un botón de "Replay" que permite
+ * reiniciar el juego al hacer clic.
+ */
 export function gameOver() {
     // Crear texto de Game Over
     const textGameOver = $(document.createElementNS("http://www.w3.org/2000/svg", "text"))
@@ -183,6 +212,12 @@ export function gameOver() {
 }
 /** estetico */
 $(document).ready(function () {
+    /**
+     * Genera "estrellas" en el fondo de la pantalla
+     *
+     * @param {number} count Número de estrellas que se van a generar
+     * @param {string} className Clase CSS para el elemento <div> que representará a la estrella
+     */
     const generateStars = (count, className) => {
         for (let i = 0; i < count; i++) {
             const x = Math.random() * 2000; // Random x position

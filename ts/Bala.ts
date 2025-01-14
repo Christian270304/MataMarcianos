@@ -1,9 +1,11 @@
-import { BALASCALE,WIDTH,HEIGHT } from "./config.js";
-export class Bala{
+import "https://code.jquery.com/jquery-3.7.1.js";
+declare let $: any;
+import { BALASCALE, WIDTH, HEIGHT } from "./config.js";
+export class Bala {
     private xPos: number;
     private yPos: number;
     private balaWidth: number;
-	private balaHeight: number;
+    private balaHeight: number;
     private bala: SVGGElement;
 
     /**
@@ -17,19 +19,19 @@ export class Bala{
      *
     */
     constructor(x = 320, y = 434) {
-		this.bala = this.createBalaElement();
+        this.bala = this.createBalaElement();
         this.balaWidth = this.bala.getBBox().width;
         this.balaHeight = this.bala.getBBox().height;
 
         this.xPos = x;
-		this.yPos = y;
+        this.yPos = y;
 
-        this.bala.setAttribute(
+        $(this.bala).attr(
             "transform",
             `translate(${this.xPos} ${this.yPos}),scale(${BALASCALE})`
         );
-    
     }
+
 
     /**
      * Crea un elemento <g> con id "bala" y devuelve la referencia a este.
@@ -64,28 +66,38 @@ export class Bala{
     
         return gElement;
     }
-    
-    setxPos(xpos:number) {
-		if (xpos < 0 + this.balaWidth) return;
-		if (xpos > 640 - this.balaWidth) return;
-		this.xPos = xpos;
+
+
+    /**
+     * Establece la posición horizontal de la bala en el valor especificado por parámetro.
+     * No permite que la bala se salga de la pantalla.
+     * 
+     * @param xpos Nueva posición horizontal de la bala.
+     */
+
+    setxPos(xpos: number) {
+        if (xpos < 0 + this.balaWidth) return;
+        if (xpos > WIDTH - this.balaWidth) return;
+        this.xPos = xpos;
         this.bala.setAttribute(
             "transform",
             `translate(${this.xPos} ${this.yPos}),scale(${BALASCALE})`
-        );	}
+        );
+    }
 
-    setyPos(ypos:number) {
-        // if (ypos < 0 + this.balaHeight) return;
-        if (ypos > 480 - this.balaHeight) return;
+    /**
+     * Establece la posición vertical de la bala en el valor especificado por parámetro.
+     * No permite que la bala se salga de la pantalla.
+     * 
+     * @param ypos Nueva posición vertical de la bala.
+     */
+    setyPos(ypos: number) {
+        if (ypos > HEIGHT - this.balaHeight) return;
         this.yPos = ypos;
         this.bala.setAttribute(
             "transform",
             `translate(${this.xPos} ${this.yPos}),scale(${BALASCALE})`
-        );    
-    }
-
-    getBalaWidth() {
-        return this.balaWidth;
+        );
     }
 
     getBalaHeight() {
@@ -98,9 +110,5 @@ export class Bala{
 
     getyPos() {
         return this.yPos;
-    }
-
-    getxPos() {
-        return this.xPos;
     }
 }

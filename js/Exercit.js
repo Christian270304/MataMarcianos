@@ -1,20 +1,17 @@
 import "https://code.jquery.com/jquery-3.7.1.js";
-import { ALIENS, COLUMNES, FILES, WIDTH, HEIGHT } from "./config.js";
+import { COLUMNES, FILES, WIDTH, HEIGHT } from "./config.js";
 import { gameOver } from "./SpaceInvaders.js";
 export class Exercit {
     xPos; // Posició horitzontal de l'exèrcit d'aliens
     yPos; // Posició vertical de l'exèrcit d'aliens
     aliensWidth;
     aliensHeight;
-    nAliens; // Nombre total d'aliens
     exercit;
     direction; // Direcció del moviment (1 = dreta, -1 = esquerra)
     constructor() {
         this.direction = 1; // Inicialitzar la direcció a dreta
-        // Inicialitzar valors
         this.xPos = 90; // Posició horitzontal de l'exèrcit d'aliens
         this.yPos = 40; // Posició vertical de l'exèrcit d'aliens
-        this.nAliens = ALIENS;
         // Posicionar l'exèrcit dels aliens
         this.exercit = document.getElementById("aliens");
         this.exercit.setAttribute("transform", "translate(" + this.xPos + " " + this.yPos + ")");
@@ -25,22 +22,9 @@ export class Exercit {
         // Crear còpies de l'alien original
         for (let i = 0; i < FILES; i++) {
             for (let j = 0; j < COLUMNES; j++) {
-                this.exercit.innerHTML += "<g class='animation'><use id='a" + i + j + "' href='#alien' transform='translate(" + (j * 60 + 40) + " " + (i * 40 + 30) + ")'></use></g>";
+                this.exercit.innerHTML += "<use id='a" + i + j + "' href='#alien' transform='translate(" + (j * 60 + 40) + " " + (i * 40 + 30) + ")'></use>";
             }
         }
-    }
-    getAlien(i, j) {
-        return document.getElementById("a" + i + j);
-    }
-    getAlienPos(i, j) {
-        let transform = this.getAlien(i, j).getAttribute("transform");
-        if (transform) {
-            let pos = transform.match(/translate\((\d+) (\d+)\)/);
-            if (pos) {
-                return { x: parseInt(pos[1]), y: parseInt(pos[2]) };
-            }
-        }
-        return null;
     }
     aliensMoviment() {
         let newYPos = this.yPos;
@@ -76,22 +60,11 @@ export class Exercit {
             }
         });
     }
-    startMoviment() {
-        setInterval(() => {
-            this.aliensMoviment();
-        }, 100);
-    }
     getAliensWidth() {
         return this.aliensWidth;
     }
     getAliensHeight() {
         return this.aliensHeight;
-    }
-    getyPos() {
-        return this.yPos;
-    }
-    getxPos() {
-        return this.xPos;
     }
 }
 //# sourceMappingURL=Exercit.js.map

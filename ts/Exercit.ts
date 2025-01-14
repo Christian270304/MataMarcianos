@@ -1,22 +1,19 @@
 import "https://code.jquery.com/jquery-3.7.1.js";
 declare let $: any;
-import { ALIENS, COLUMNES, FILES, WIDTH, HEIGHT } from "./config.js";
+import { COLUMNES, FILES, WIDTH, HEIGHT } from "./config.js";
 import { gameOver } from "./SpaceInvaders.js";
 export class Exercit {
 	private xPos: number;	// Posició horitzontal de l'exèrcit d'aliens
 	private yPos: number;	// Posició vertical de l'exèrcit d'aliens
 	private aliensWidth: number;
 	private aliensHeight: number;
-	private nAliens: number;	// Nombre total d'aliens
 	private exercit: SVGPathElement;
 	private direction: number; // Direcció del moviment (1 = dreta, -1 = esquerra)
 
 	constructor() {
 		this.direction = 1; // Inicialitzar la direcció a dreta
-		// Inicialitzar valors
 		this.xPos = 90;	// Posició horitzontal de l'exèrcit d'aliens
 		this.yPos = 40; // Posició vertical de l'exèrcit d'aliens
-		this.nAliens = ALIENS;
 
 		// Posicionar l'exèrcit dels aliens
 		this.exercit = document.getElementById("aliens") as unknown as SVGPathElement;
@@ -30,26 +27,10 @@ export class Exercit {
 		// Crear còpies de l'alien original
 		for (let i = 0; i < FILES; i++) {
 			for (let j = 0; j < COLUMNES; j++) {
-				this.exercit.innerHTML += "<g class='animation'><use id='a" + i + j + "' href='#alien' transform='translate(" + (j * 60 + 40) + " " + (i * 40 + 30) + ")'></use></g>";
+				this.exercit.innerHTML += "<use id='a" + i + j + "' href='#alien' transform='translate(" + (j * 60 + 40) + " " + (i * 40 + 30) + ")'></use>";
 			}
 		}
 	}
-
-	public getAlien(i: number, j: number) {
-		return document.getElementById("a" + i + j)!;
-	}
-
-	public getAlienPos(i: number, j: number) {
-		let transform = this.getAlien(i, j).getAttribute("transform");
-		if (transform) {
-			let pos = transform.match(/translate\((\d+) (\d+)\)/);
-			if (pos) {
-				return { x: parseInt(pos[1]), y: parseInt(pos[2]) };
-			}
-		}
-		return null;
-	}
-	
 	
 	public aliensMoviment() {
 		let newYPos:number = this.yPos;
@@ -99,13 +80,6 @@ export class Exercit {
 		});
 	}
 	
-	
-
-	public startMoviment() {
-		setInterval(() => {
-			this.aliensMoviment();
-		}, 100);
-	}
 
 	getAliensWidth() {
 		return this.aliensWidth;
@@ -114,13 +88,5 @@ export class Exercit {
 	getAliensHeight() {
 		return this.aliensHeight;
 	}
-
-	getyPos() {
-        return this.yPos;
-    }
-
-    getxPos() {
-        return this.xPos;
-    }
 }
 

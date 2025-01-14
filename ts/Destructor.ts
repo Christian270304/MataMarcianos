@@ -1,3 +1,5 @@
+import "https://code.jquery.com/jquery-3.7.1.js";
+declare let $: any;
 import { directions } from "./interfaces.js";
 import { Bala } from "./Bala.js";
 import { WIDTH, BALASPEED } from "./config.js";
@@ -8,7 +10,7 @@ export class Destructor {
 	private nauHeight: number;
 	private nau: SVGPathElement;
 
-	
+
 	/**
 	 * Constructor de la clase Destructor.
 	 * 
@@ -17,18 +19,18 @@ export class Destructor {
 	 * 
 	 */
 	constructor() {
-		// Inicialitzar valors
-		this.xPos = 320; // Posició horitzontal de la nau
-		this.yPos = 460; // Posició vertical de la nau
+		// Inicializar valores
+		this.xPos = 320; // Posición horizontal de la nave
+		this.yPos = 460; // Posición vertical de la nave
 
-		// Moure la nau a la posició inicial
-		this.nau = document.getElementById("nau") as unknown as SVGPathElement;
-		this.nau.setAttribute("transform", "translate(" + this.xPos + " " + this.yPos + ")");
-		
-		//obtenir dimensions de la nau
-		this.nauWidth = this.nau.getBBox().width - 18;
-		this.nauHeight = this.nau.getBBox().height;
+		this.nau = $("#nau")[0] as unknown as SVGPathElement; // Seleccionar con jQuery y obtener el elemento DOM
+		$(this.nau).attr("transform", `translate(${this.xPos} ${this.yPos})`);
+
+		const bbox = this.nau.getBBox();
+		this.nauWidth = bbox.width - 18;
+		this.nauHeight = bbox.height;
 	}
+
 
 	/**
 	 * Mueve la nave en la dirección especificada.
@@ -40,17 +42,15 @@ export class Destructor {
 	 * @param {directions} direction Dirección en la que se va a mover la nave.
 	 */
 	public moveNau(direction: directions) {
-		// Calcula la nueva posición provisionalmente
 		const newXPos = this.xPos + (direction === directions.RIGHT ? 15 : -15);
-	
-		// Restringe el valor entre 0 y el WIDTH del area de juego
+
 		this.xPos = Math.max(0 + this.getNauWidth(), Math.min(newXPos, WIDTH - this.getNauWidth()));
-	
-		// Actualiza la posición transformada de la nave
-		this.nau.setAttribute("transform", `translate(${this.xPos} ${this.yPos})`);
-		this.nau.style.transition = "transform 0.1s ease-out";
+
+		$(this.nau).attr("transform", `translate(${this.xPos} ${this.yPos})`);
+		$(this.nau).css("transition", "transform 0.1s ease-out");
 	}
-	
+
+
 
 	/**
 	 * Lanza una bala desde la nave actual.
@@ -59,32 +59,40 @@ export class Destructor {
 	 */
 	public disparar() {
 		const audio = new Audio("sounds/shoot.wav");
-			audio.play();
-		let bala = new Bala();
-		bala.setxPos((this.xPos-this.getNauWidth()/2) + 5);
-		bala.setyPos(this.yPos-this.getNauHeight());
-		
-		let balaInterval = setInterval(() => {
+		audio.play();
+
+		const bala = new Bala();
+		bala.setxPos((this.xPos - this.getNauWidth() / 2) + 5);
+		bala.setyPos(this.yPos - this.getNauHeight());
+
+		const $joc = $("#joc"); 
+
+		const balaInterval = setInterval(() => {
 			bala.setyPos(bala.getyPos() - BALASPEED);
 			if (bala.getyPos() <= 0 + bala.getBalaHeight()) {
 				clearInterval(balaInterval);
-				document.getElementById("joc")!.removeChild(bala.getBala());
+				$(bala.getBala()).remove(); 
 			}
 		}, 50);
-		document.getElementById("joc")!.appendChild(bala.getBala());
+
+		// Añadimos la bala al contenedor
+		$joc.append(bala.getBala());
 	}
+
 
 	/**
 	 * Establece la posición horizontal de la nave en el valor especificado por parámetro.
 	 * No permite que la nave se salga de la pantalla.
 	 * @param xpos Nueva posición horizontal de la nave.
 	 */
-	setxPos(xpos:number) {
+	public setxPos(xpos: number) {
 		if (xpos < 0 + this.getNauWidth()) return;
-		if (xpos > 640 - this.getNauWidth()) return;
+		if (xpos > WIDTH - this.getNauWidth()) return;
+
 		this.xPos = xpos;
-		this.nau.setAttribute("transform", "translate(" + this.xPos + " " + this.yPos + ")");
+		$(this.nau).attr("transform", `translate(${this.xPos} ${this.yPos})`);
 	}
+
 
 	getxPos() {
 		return this.xPos;
@@ -102,5 +110,5 @@ export class Destructor {
 		return this.nauHeight;
 	}
 
-	
+
 }

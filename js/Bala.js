@@ -1,4 +1,5 @@
-import { BALASCALE } from "./config.js";
+import "https://code.jquery.com/jquery-3.7.1.js";
+import { BALASCALE, WIDTH, HEIGHT } from "./config.js";
 export class Bala {
     xPos;
     yPos;
@@ -21,7 +22,7 @@ export class Bala {
         this.balaHeight = this.bala.getBBox().height;
         this.xPos = x;
         this.yPos = y;
-        this.bala.setAttribute("transform", `translate(${this.xPos} ${this.yPos}),scale(${BALASCALE})`);
+        $(this.bala).attr("transform", `translate(${this.xPos} ${this.yPos}),scale(${BALASCALE})`);
     }
     /**
      * Crea un elemento <g> con id "bala" y devuelve la referencia a este.
@@ -46,23 +47,31 @@ export class Bala {
         gElement.appendChild(path2);
         return gElement;
     }
+    /**
+     * Establece la posición horizontal de la bala en el valor especificado por parámetro.
+     * No permite que la bala se salga de la pantalla.
+     *
+     * @param xpos Nueva posición horizontal de la bala.
+     */
     setxPos(xpos) {
         if (xpos < 0 + this.balaWidth)
             return;
-        if (xpos > 640 - this.balaWidth)
+        if (xpos > WIDTH - this.balaWidth)
             return;
         this.xPos = xpos;
         this.bala.setAttribute("transform", `translate(${this.xPos} ${this.yPos}),scale(${BALASCALE})`);
     }
+    /**
+     * Establece la posición vertical de la bala en el valor especificado por parámetro.
+     * No permite que la bala se salga de la pantalla.
+     *
+     * @param ypos Nueva posición vertical de la bala.
+     */
     setyPos(ypos) {
-        // if (ypos < 0 + this.balaHeight) return;
-        if (ypos > 480 - this.balaHeight)
+        if (ypos > HEIGHT - this.balaHeight)
             return;
         this.yPos = ypos;
         this.bala.setAttribute("transform", `translate(${this.xPos} ${this.yPos}),scale(${BALASCALE})`);
-    }
-    getBalaWidth() {
-        return this.balaWidth;
     }
     getBalaHeight() {
         return this.balaHeight;
@@ -72,9 +81,6 @@ export class Bala {
     }
     getyPos() {
         return this.yPos;
-    }
-    getxPos() {
-        return this.xPos;
     }
 }
 //# sourceMappingURL=Bala.js.map
