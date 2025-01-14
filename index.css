@@ -14,6 +14,10 @@ svg {
     border: 1px solid white;
 }
 
+#nau{
+    display: none;
+}
+
 
 #alien {
     animation: colorChange 1s infinite alternate;
@@ -42,6 +46,18 @@ svg {
     width: 3px;
     height: 3px;
     animation-duration: 150s;
+}
+
+@keyframes shrink{
+    0%{
+        transform: scale(1);
+    }
+    50%{
+        transform: scale(0.8);
+    }
+    100%{
+        transform: scale(1);
+    }
 }
 
 

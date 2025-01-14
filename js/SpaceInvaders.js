@@ -10,7 +10,35 @@ import { directions } from "./interfaces.js";
  * y asigna los eventos necesarios para el movimiento de la nave y el disparo de balas.
  */
 function init() {
+    const svg = $("svg");
+    const svgRect = svg[0].getBoundingClientRect();
+    // Crear botón de "Start"
+    const playButton = $("<button>")
+        .attr("id", "playButton")
+        .css({
+        position: "absolute",
+        zIndex: 5,
+        fontSize: "24px",
+        color: "white",
+        transform: "translate(-50%, 30%)",
+        left: `${svgRect.left + svgRect.width / 2}px`,
+        top: `${svgRect.top + svgRect.height / 2}px`,
+        display: "block"
+    })
+        .text("Start");
+    $("body").append(playButton);
+    playButton.on("click", () => {
+        playButton.remove();
+        // Evitar que se dispare inmediatamente el inicio del juego
+        setTimeout(initGame, 100);
+    });
+}
+function initGame() {
+    const audio = new Audio("sounds/spaceinvaders.mpeg");
+    audio.loop = true;
+    audio.play();
     // Crear la nau i l'exèrcit dels aliens
+    $("#nau").css("display", "block");
     let destructor = new Destructor();
     let exercit = new Exercit();
     exercit.startMoviment();
@@ -100,7 +128,7 @@ function disparar(destructor) {
     });
 }
 function alienDestruction() {
-    const bala = document.querySelector("#bala");
+    const bala = $("#bala")[0]; // Seleccionamos el elemento bala con jQuery y aseguramos el tipo
     if (!bala)
         return;
     $("use[id^='a']").each((i, e) => {
@@ -111,10 +139,47 @@ function alienDestruction() {
             balaRect.bottom < alienRect.top ||
             balaRect.top > alienRect.bottom);
         if (collision) {
-            e.remove();
-            bala.remove();
+            const audio = new Audio("sounds/invaderkilled.wav");
+            audio.play();
+            $(e).remove(); // Eliminar el alien usando jQuery
+            $(bala).remove(); // Eliminar la bala usando jQuery
         }
     });
+}
+export function gameOver() {
+    // Crear texto de Game Over
+    const textGameOver = $(document.createElementNS("http://www.w3.org/2000/svg", "text"))
+        .attr({
+        x: "50%",
+        y: "50%",
+        "font-size": "24",
+        fill: "red",
+        "text-anchor": "middle"
+    })
+        .text("GAME OVER");
+    $("#joc").append(textGameOver);
+    // Reproducir sonido de Game Over
+    const audio = new Audio("sounds/gameover.wav");
+    audio.play();
+    // Crear botón de Replay
+    const svg = $("svg");
+    const svgRect = svg[0].getBoundingClientRect();
+    const replayButton = $("<button>")
+        .css({
+        position: "absolute",
+        zIndex: 5,
+        fontSize: "24px",
+        color: "white",
+        transform: "translate(-50%, 30%)",
+        left: `${svgRect.left + svgRect.width / 2}px`,
+        top: `${svgRect.top + svgRect.height / 2}px`,
+        display: "block"
+    })
+        .text("Replay")
+        .on("click", () => {
+        location.reload();
+    });
+    $("body").append(replayButton);
 }
 /** estetico */
 $(document).ready(function () {

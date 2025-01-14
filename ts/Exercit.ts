@@ -1,7 +1,7 @@
 import "https://code.jquery.com/jquery-3.7.1.js";
 declare let $: any;
 import { ALIENS, COLUMNES, FILES, WIDTH, HEIGHT } from "./config.js";
-import { Position } from "./interfaces.js";
+import { gameOver } from "./SpaceInvaders.js";
 export class Exercit {
 	private xPos: number;	// Posició horitzontal de l'exèrcit d'aliens
 	private yPos: number;	// Posició vertical de l'exèrcit d'aliens
@@ -30,7 +30,7 @@ export class Exercit {
 		// Crear còpies de l'alien original
 		for (let i = 0; i < FILES; i++) {
 			for (let j = 0; j < COLUMNES; j++) {
-				this.exercit.innerHTML += "<use id='a" + i + j + "' href='#alien' transform='translate(" + (j * 60 + 40) + " " + (i * 40 + 30) + ")'></use>";
+				this.exercit.innerHTML += "<g class='animation'><use id='a" + i + j + "' href='#alien' transform='translate(" + (j * 60 + 40) + " " + (i * 40 + 30) + ")'></use></g>";
 			}
 		}
 	}
@@ -60,10 +60,10 @@ export class Exercit {
 			this.direction = 1; // Canviar la direcció a dreta
 		}
 		
-		let newXPos = this.xPos + 20 * this.direction;
+		let newXPos = this.xPos + 10 * this.direction;
 
 		if (this.yPos + this.exercit.getBBox().height <= (HEIGHT)-5) {
-			newYPos = this.yPos + 5;
+			newYPos = this.yPos + 1;
 		}
 
 		this.xPos = Math.max(0, Math.min(newXPos, WIDTH - this.getAliensWidth()));
@@ -75,9 +75,9 @@ export class Exercit {
 
 		const allAliens = document.getElementById('aliens') as unknown as SVGGElement;
 		const nave = document.querySelector<SVGGElement>("#nau"); 
-		if (!nave) throw new Error("Nave no encontrada");
+		if (!nave) return;
 		const naveRect = nave.getBoundingClientRect();
-		console.log(naveRect);
+		
 		$("use[id^='a']").each((i: number, e: SVGAElement) => {
 			const alienRect = e.getBoundingClientRect();
 			
@@ -124,38 +124,3 @@ export class Exercit {
     }
 }
 
-function gameOver(): void {
-	// Crear texto de Game Over
-	const textGameOver = document.createElementNS("http://www.w3.org/2000/svg", "text");
-	textGameOver.setAttribute("x", "50%");
-	textGameOver.setAttribute("y", "50%");
-	textGameOver.setAttribute("font-size", "24");
-	textGameOver.setAttribute("fill", "red");
-	textGameOver.setAttribute("text-anchor", "middle");
-	textGameOver.textContent = "GAME OVER";
-	document.getElementById("joc")!.appendChild(textGameOver);
-
-	// Reproducir sonido de Game Over
-	const audio = new Audio("sounds/gameover.mp3");
-	audio.play();
-
-	// Crear botón de Replay
-    const replayButton = document.createElement("button");
-	const svg = document.querySelector<SVGElement>("svg")!;
-    
-	const svgRect = svg.getBoundingClientRect();
-	replayButton.style.position = "absolute";
-	replayButton.style.zIndex = "5";
-	replayButton.style.fontSize = "24px";
-	replayButton.style.color = "red";
-	replayButton.style.transform = "translate(-50%, 30%)";
-	replayButton.style.left = `${svgRect.left + svgRect.width / 2}px`;
-	replayButton.style.top = `${svgRect.top + svgRect.height / 2}px`;
-	replayButton.style.display = "block";
-	replayButton.textContent = "Replay";
-	replayButton.onclick = () => {
-		location.reload();
-	};
-    document.body.appendChild(replayButton);
-
-}

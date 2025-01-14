@@ -58,6 +58,8 @@ export class Destructor {
 	 * Si la bala sale de la pantalla, se elimina.
 	 */
 	public disparar() {
+		const audio = new Audio("sounds/shoot.wav");
+			audio.play();
 		let bala = new Bala();
 		bala.setxPos((this.xPos-this.getNauWidth()/2) + 5);
 		bala.setyPos(this.yPos-this.getNauHeight());

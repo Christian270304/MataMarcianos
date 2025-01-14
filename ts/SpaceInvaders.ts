@@ -4,7 +4,6 @@ declare let $: any;
 import { Destructor } from "./Destructor.js";
 import { Exercit } from "./Exercit.js";
 import { directions } from "./interfaces.js";
-import { Bala } from "./Bala.js";
 ///////////////////////////////////////////////////////////
 // Alumnes: Christian Torres y Daniela Gamez
 ///////////////////////////////////////////////////////////
@@ -15,7 +14,41 @@ import { Bala } from "./Bala.js";
  */
 
 function init() {
+	const svg = $("svg");
+	const svgRect = svg[0].getBoundingClientRect();
+
+	// Crear botón de "Start"
+	const playButton = $("<button>")
+		.attr("id", "playButton")
+		.css({
+			position: "absolute",
+			zIndex: 5,
+			fontSize: "24px",
+			color: "white",
+			transform: "translate(-50%, 30%)",
+			left: `${svgRect.left + svgRect.width / 2}px`,
+			top: `${svgRect.top + svgRect.height / 2}px`,
+			display: "block"
+		})
+		.text("Start");
+
+	$("body").append(playButton);
+
+	playButton.on("click", () => {
+		playButton.remove();
+		// Evitar que se dispare inmediatamente el inicio del juego
+		setTimeout(initGame, 100);
+	});
+}
+
+
+function initGame() {
+	const audio = new Audio("sounds/spaceinvaders.mpeg");
+	audio.loop = true;
+	audio.play();
 	// Crear la nau i l'exèrcit dels aliens
+	$("#nau").css("display", "block");
+
 	let destructor = new Destructor();
 	let exercit = new Exercit();
 
@@ -25,8 +58,6 @@ function init() {
 	disparar(destructor);
 	alienDestruction();
 	setInterval(alienDestruction, 20);
-
-
 }
 
 /**
@@ -113,10 +144,10 @@ function disparar(destructor: Destructor) {
 }
 
 function alienDestruction(): void {
-	const bala = document.querySelector<SVGGElement>("#bala"); // Seleccionamos el elemento bala correctamente con tipo
+	const bala = $("#bala")[0] as SVGGElement; // Seleccionamos el elemento bala con jQuery y aseguramos el tipo
 	if (!bala) return;
 
-	$("use[id^='a']").each((i: number, e: SVGAElement) => {
+	$("use[id^='a']").each((i: number, e: HTMLElement) => {
 		const alienRect = e.getBoundingClientRect();
 		const balaRect = bala.getBoundingClientRect();
 
@@ -128,11 +159,56 @@ function alienDestruction(): void {
 		);
 
 		if (collision) {
-			e.remove();
-			bala.remove();
+			const audio = new Audio("sounds/invaderkilled.wav");
+			audio.play();
+			$(e).remove(); // Eliminar el alien usando jQuery
+			$(bala).remove(); // Eliminar la bala usando jQuery
 		}
 	});
 }
+
+
+export function gameOver(): void {
+	// Crear texto de Game Over
+	const textGameOver = $(document.createElementNS("http://www.w3.org/2000/svg", "text"))
+		.attr({
+			x: "50%",
+			y: "50%",
+			"font-size": "24",
+			fill: "red",
+			"text-anchor": "middle"
+		})
+		.text("GAME OVER");
+
+	$("#joc").append(textGameOver);
+
+	// Reproducir sonido de Game Over
+	const audio = new Audio("sounds/gameover.wav");
+	audio.play();
+
+	// Crear botón de Replay
+	const svg = $("svg");
+	const svgRect = svg[0].getBoundingClientRect();
+
+	const replayButton = $("<button>")
+		.css({
+			position: "absolute",
+			zIndex: 5,
+			fontSize: "24px",
+			color: "white",
+			transform: "translate(-50%, 30%)",
+			left: `${svgRect.left + svgRect.width / 2}px`,
+			top: `${svgRect.top + svgRect.height / 2}px`,
+			display: "block"
+		})
+		.text("Replay")
+		.on("click", () => {
+			location.reload();
+		});
+
+	$("body").append(replayButton);
+}
+
 
 /** estetico */
 
