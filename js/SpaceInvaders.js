@@ -16,7 +16,7 @@ function init() {
     exercit.startMoviment();
     nauMovement(destructor);
     disparar(destructor);
-    alienDestruction(exercit);
+    alienDestruction();
     setInterval(alienDestruction, 20);
 }
 /**
@@ -99,8 +99,8 @@ function disparar(destructor) {
         }
     });
 }
-function alienDestruction(exercit) {
-    const bala = document.querySelector("#bala"); // Seleccionamos el elemento bala correctamente con tipo
+function alienDestruction() {
+    const bala = document.querySelector("#bala");
     if (!bala)
         return;
     $("use[id^='a']").each((i, e) => {

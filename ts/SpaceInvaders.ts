@@ -19,11 +19,11 @@ function init() {
 	let destructor = new Destructor();
 	let exercit = new Exercit();
 
+
 	exercit.startMoviment();
 	nauMovement(destructor);
 	disparar(destructor);
-
-	alienDestruction(exercit);
+	alienDestruction();
 	setInterval(alienDestruction, 20);
 
 
@@ -133,7 +133,6 @@ function alienDestruction(exercit: Exercit): void {
 		}
 	});
 }
-
 
 /** estetico */
 
