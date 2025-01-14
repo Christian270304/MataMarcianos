@@ -2,7 +2,6 @@ import "https://code.jquery.com/jquery-3.7.1.js";
 import { Destructor } from "./Destructor.js";
 import { Exercit } from "./Exercit.js";
 import { directions } from "./interfaces.js";
-import { Bala } from "./Bala.js";
 ///////////////////////////////////////////////////////////
 // Alumnes: Christian Torres y Daniela Gamez
 ///////////////////////////////////////////////////////////
@@ -14,7 +13,6 @@ function init() {
     // Crear la nau i l'exèrcit dels aliens
     let destructor = new Destructor();
     let exercit = new Exercit();
-    let bala = new Bala();
     exercit.startMoviment();
     nauMovement(destructor);
     disparar(destructor);
@@ -118,5 +116,21 @@ function alienDestruction(exercit) {
         }
     });
 }
+/** estetico */
+$(document).ready(function () {
+    const generateStars = (count, className) => {
+        for (let i = 0; i < count; i++) {
+            const x = Math.random() * 2000; // Random x position
+            const y = Math.random() * 2000; // Random y position
+            $('body').append($('<div class="stars"></div>')
+                .addClass(className)
+                .css({ top: `${y}px`, left: `${x}px` }));
+        }
+    };
+    // Generate stars: small, medium, and big
+    generateStars(700, 'small');
+    generateStars(100, 'medium');
+    generateStars(50, 'big');
+});
 init();
 //# sourceMappingURL=SpaceInvaders.js.map

@@ -18,13 +18,14 @@ function init() {
 	// Crear la nau i l'exèrcit dels aliens
 	let destructor = new Destructor();
 	let exercit = new Exercit();
-	let bala = new Bala();
+
 	exercit.startMoviment();
 	nauMovement(destructor);
 	disparar(destructor);
 
 	alienDestruction(exercit);
 	setInterval(alienDestruction, 20);
+
 
 }
 
@@ -112,26 +113,47 @@ function disparar(destructor: Destructor) {
 }
 
 function alienDestruction(exercit: Exercit): void {
-    const bala = document.querySelector<SVGGElement>("#bala"); // Seleccionamos el elemento bala correctamente con tipo
-    if (!bala) return;
+	const bala = document.querySelector<SVGGElement>("#bala"); // Seleccionamos el elemento bala correctamente con tipo
+	if (!bala) return;
 
-    $("use[id^='a']").each((i: number, e: SVGAElement) => {
-        const alienRect = e.getBoundingClientRect();
-        const balaRect = bala.getBoundingClientRect();
+	$("use[id^='a']").each((i: number, e: SVGAElement) => {
+		const alienRect = e.getBoundingClientRect();
+		const balaRect = bala.getBoundingClientRect();
 
-        const collision = !(
-            balaRect.right < alienRect.left ||
-            balaRect.left > alienRect.right ||
-            balaRect.bottom < alienRect.top ||
-            balaRect.top > alienRect.bottom
-        );
+		const collision = !(
+			balaRect.right < alienRect.left ||
+			balaRect.left > alienRect.right ||
+			balaRect.bottom < alienRect.top ||
+			balaRect.top > alienRect.bottom
+		);
 
-        if (collision) {
-            e.remove();
+		if (collision) {
+			e.remove();
 			bala.remove();
-        }
-    });
+		}
+	});
 }
 
+
+/** estetico */
+
+$(document).ready(function () {
+	const generateStars = (count: number, className: string) => {
+		for (let i = 0; i < count; i++) {
+			const x = Math.random() * 2000; // Random x position
+			const y = Math.random() * 2000; // Random y position
+			$('body').append(
+				$('<div class="stars"></div>')
+					.addClass(className)
+					.css({ top: `${y}px`, left: `${x}px` })
+			);
+		}
+	};
+
+	// Generate stars: small, medium, and big
+	generateStars(700, 'small');
+	generateStars(100, 'medium');
+	generateStars(50, 'big');
+});
 
 init();

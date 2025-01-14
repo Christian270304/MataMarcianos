@@ -48,7 +48,7 @@ export class Bala{
             "d",
             "M82.358,71.21692v77.33H26.388c0-21.82.24006-43.65-.06994-65.47a101.62711,101.62711,0,0,1,13.61-52.98c4.01-7.02,8.53472-13.7529,15.16472-18.67289,14.99,15.19,23.67525,33.4929,26.86525,54.59288C82.218,67.71692,82.19806,69.47693,82.358,71.21692Z"
         );
-        path1.setAttribute("style", "fill:rgb(37, 37, 37)");
+        path1.setAttribute("style", "fill:rgb(255, 249, 85)");
     
         // Crear el segundo <path>
         const path2 = document.createElementNS("http://www.w3.org/2000/svg", "path");

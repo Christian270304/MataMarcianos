@@ -1,0 +1,69 @@
+* {
+    color-scheme: light dark;
+}
+
+body {
+    height: 100vh;
+    background: rgb(2,0,36);
+    background: linear-gradient(176deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 68%, rgb(1, 46, 55) 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+svg {
+    border: 1px solid white;
+}
+
+
+#alien {
+    animation: colorChange 1s infinite alternate;
+}
+
+.stars {
+    position: absolute;
+    background: #fff;
+    z-index: -1;
+    animation: animStar 50s linear infinite;
+}
+
+.small {
+    width: 1px;
+    height: 1px;
+    animation-duration: 50s;
+}
+
+.medium {
+    width: 2px;
+    height: 2px;
+    animation-duration: 100s;
+}
+
+.big {
+    width: 3px;
+    height: 3px;
+    animation-duration: 150s;
+}
+
+
+/* Cambia el color del path */
+@keyframes colorChange {
+    0% {
+        fill: #c00000;
+        /* Rojo al principio */
+    }
+
+    100% {
+        fill: #5252ff;
+        /* Azul al final */
+    }
+}
+
+@keyframes animStar {
+    from {
+        transform: translateY(0px);
+    }
+
+    to {
+        transform: translateY(-2000px);
+    }
+}
