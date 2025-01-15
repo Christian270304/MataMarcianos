@@ -25,7 +25,7 @@ function init() {
 			position: "absolute",
 			zIndex: 5,
 			fontSize: "24px",
-			color: "white",
+			color: "black",
 			transform: "translate(-50%, 30%)",
 			left: `${svgRect.left + svgRect.width / 2}px`,
 			top: `${svgRect.top + svgRect.height / 2}px`,
@@ -52,7 +52,8 @@ function initGame() {
 	let destructor = new Destructor();
 	let exercit = new Exercit();
 
-
+	win();
+	setInterval(win, 20);
 	startAliensMovement(exercit);
 	nauMovement(destructor);
 	disparar(destructor);
@@ -119,6 +120,72 @@ function handleMovement(destructor: Destructor, pressedKeys: Set<string>) {
 		destructor.moveNau(directions.RIGHT);
 	}
 }
+/**
+	 * Comprueba si la bala ha chocado con algún alien y en caso de que así sea, 
+	 * elimina la bala y el alien que ha chocado y reproduce el sonido de destrucción del alien.
+	 * 
+	 */
+function alienDestruction(): void {
+	const bala = $("#bala")[0] as SVGGElement; // Seleccionamos el elemento bala con jQuery y aseguramos el tipo
+	
+	if (!bala) return;
+
+	$("use[id^='a']").each((i: number, e: HTMLElement) => {
+		const alienRect = e.getBoundingClientRect();
+		const balaRect = bala.getBoundingClientRect();
+
+		const collision = !(
+			balaRect.right < alienRect.left ||
+			balaRect.left > alienRect.right ||
+			balaRect.bottom < alienRect.top ||
+			balaRect.top > alienRect.bottom
+		);
+		
+		if (collision) {
+			
+			const audio = new Audio("sounds/invaderkilled.wav");
+			audio.play();
+			$(e).remove(); // Eliminar el alien usando jQuery
+			$(bala).remove(); // Eliminar la bala usando jQuery
+		}
+	});
+}
+
+function win(){
+	const allAliens = document.getElementById('aliens') as unknown as SVGGElement;
+	const nave = document.querySelector<SVGGElement>("#nau") as unknown as SVGGElement;
+	if (allAliens.children.length === 0) {
+		// Crear texto de Win
+		const textGameOver = $(document.createElementNS("http://www.w3.org/2000/svg", "text"))
+		.attr({x: "50%",y: "50%","font-size": "24",fill: "red","text-anchor": "middle"})
+		.text("WIN");
+
+		$("#joc").append(textGameOver);
+		// Crear botón de Replay
+		const svg = $("svg");
+		const svgRect = svg[0].getBoundingClientRect();
+
+		const replayButton = $("<button>")
+			.css({
+				position: "absolute",
+				zIndex: 5,
+				fontSize: "24px",
+				color: "white",
+				transform: "translate(-50%, 30%)",
+				left: `${svgRect.left + svgRect.width / 2}px`,
+				top: `${svgRect.top + svgRect.height / 2}px`,
+				display: "block"
+			})
+			.text("Replay")
+			.on("click", () => {
+				location.reload();
+			});
+
+		$("body").append(replayButton);
+		// Eliminar la nave
+		nave.remove();
+		}
+}
 
 /**
  * Inicia el movimiento continuo de los aliens.
@@ -146,22 +213,21 @@ function startAliensMovement(aliens: Exercit) {
  */
 
 function disparar(destructor: Destructor) {
-	
-	
 	$(document)
 		.on('click', () => {
 			let b = document.getElementById("bala") as unknown as SVGGElement;
 			const aliens = document.getElementById("aliens") as unknown as SVGGElement;
-			
-			if (!b && aliens) destructor.disparar();
+			const nave = document.getElementById("nau") as unknown as SVGGElement;
+			if (!b && aliens && nave) destructor.disparar();
 		
 		})
 		.on('keydown', (event: KeyboardEvent) => {
 			if (event.code === 'Space' || event.code === 'Enter') {
 				let b = document.getElementById("bala") as unknown as SVGGElement;
 				const aliens = document.getElementById("aliens") as unknown as SVGGElement;
-			
-				if (!b && aliens) destructor.disparar();
+				const nave = document.getElementById("nau") as unknown as SVGGElement;
+
+				if (!b && aliens && nave) destructor.disparar();
 			};
 		})
 		.on('contextmenu', (event: MouseEvent) => {
@@ -172,40 +238,14 @@ function disparar(destructor: Destructor) {
 				// Disparar al hacer clic derecho sin Shift
 				const b = document.getElementById("bala") as unknown as SVGGElement;
 				const aliens = document.getElementById("aliens") as unknown as SVGGElement;
-			
-				if (!b && aliens) destructor.disparar();
+				const nave = document.getElementById("nau") as unknown as SVGGElement;
+
+				if (!b && aliens && nave) destructor.disparar();
 			}
 		});
 }
 
-/**
- * Comprueba si la bala ha chocado con algún alien y en caso de que así sea, 
- * elimina la bala y el alien que ha chocado y reproduce el sonido de destrucción del alien.
- * 
- */
-function alienDestruction(): void {
-	const bala = $("#bala")[0] as SVGGElement; // Seleccionamos el elemento bala con jQuery y aseguramos el tipo
-	if (!bala) return;
 
-	$("use[id^='a']").each((i: number, e: HTMLElement) => {
-		const alienRect = e.getBoundingClientRect();
-		const balaRect = bala.getBoundingClientRect();
-
-		const collision = !(
-			balaRect.right < alienRect.left ||
-			balaRect.left > alienRect.right ||
-			balaRect.bottom < alienRect.top ||
-			balaRect.top > alienRect.bottom
-		);
-
-		if (collision) {
-			const audio = new Audio("sounds/invaderkilled.wav");
-			audio.play();
-			$(e).remove(); // Eliminar el alien usando jQuery
-			$(bala).remove(); // Eliminar la bala usando jQuery
-		}
-	});
-}
 
 
 /**
@@ -241,7 +281,7 @@ export function gameOver(): void {
 			position: "absolute",
 			zIndex: 5,
 			fontSize: "24px",
-			color: "white",
+			color: "black",
 			transform: "translate(-50%, 30%)",
 			left: `${svgRect.left + svgRect.width / 2}px`,
 			top: `${svgRect.top + svgRect.height / 2}px`,
@@ -278,9 +318,9 @@ $(document).ready(function () {
 	};
 
 	// Generate stars: small, medium, and big
-	//generateStars(700, 'small');
-	//generateStars(100, 'medium');
-	//generateStars(50, 'big');
+	generateStars(700, 'small');
+	generateStars(100, 'medium');
+	generateStars(50, 'big');
 });
 
 init();

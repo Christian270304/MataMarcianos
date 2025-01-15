@@ -1,5 +1,5 @@
 import "https://code.jquery.com/jquery-3.7.1.js";
-import { COLUMNES, FILES, WIDTH, HEIGHT } from "./config.js";
+import { COLUMNES, FILES, WIDTH, HEIGHT, ALIENSPEED } from "./config.js";
 import { gameOver } from "./SpaceInvaders.js";
 export class Exercit {
     xPos; // Posició horitzontal de l'exèrcit d'aliens
@@ -29,56 +29,43 @@ export class Exercit {
     }
     aliensMoviment() {
         let newYPos = this.yPos;
-        if (this.xPos + this.exercit.getBBox().width >= WIDTH) {
-            this.direction = -1; // Canviar la direcció a esquerra
-        }
-        else if (this.xPos <= 0) {
-            this.direction = 1; // Canviar la direcció a dreta
-        }
-        let newXPos = this.xPos + 10 * this.direction;
-        if (this.yPos + this.exercit.getBBox().height <= (HEIGHT) - 5) {
-            newYPos = this.yPos + 1;
-        }
-        this.xPos = Math.max(0, Math.min(newXPos, WIDTH - this.getAliensWidth()));
-        this.yPos = Math.max(0, Math.min(newYPos, HEIGHT - this.getAliensHeight()));
-        this.exercit.setAttribute("transform", `translate(${this.xPos} ${this.yPos})`);
-        this.exercit.style.transition = "transform 0.1s ease-out";
+        const joc = document.getElementById('joc').getBoundingClientRect();
         const allAliens = document.getElementById('aliens');
         const nave = document.querySelector("#nau");
-        const alienRec = allAliens.getBoundingClientRect();
         if (!nave)
             return;
         const naveRect = nave.getBoundingClientRect();
+        const aliensRec = allAliens.getBoundingClientRect();
         $("use[id^='a']").each((i, e) => {
-            if (!e.parentNode)
-                return; // Saltar si el alien fue eliminado
             const alienRect = e.getBoundingClientRect();
             const collisionNave = !(alienRect.right < naveRect.left ||
                 alienRect.left > naveRect.right ||
                 alienRect.bottom < naveRect.top ||
                 alienRect.top > naveRect.bottom);
-            if (collisionNave || alienRect.bottom >= (joc.bottom - 8)) {
+            if (collisionNave || alienRect.bottom >= HEIGHT + 7) {
                 allAliens.remove();
                 nave.remove();
                 gameOver();
             }
         });
-        if (alienRec.right >= joc.right) {
+        if (aliensRec.right >= joc.right) {
             this.direction = -ALIENSPEED; // Cambiar la dirección a izquierda
         }
-        else if (Math.floor(alienRec.left) <= joc.left + 1) {
+        else if (Math.floor(aliensRec.left) <= joc.left + 1) {
             this.direction = ALIENSPEED; // Cambiar la dirección a derecha
         }
-        console.log("alien " + alienRec.left);
-        console.log("joc " + joc.left);
-        let newXPos = Math.floor(this.xPos + 10 * this.direction);
-        if (this.yPos + this.exercit.getBoundingClientRect().height <= HEIGHT - 5) {
-            newYPos = this.yPos + ALIENSPEED;
+        let newXPos = this.xPos + 10 * this.direction;
+        if (this.yPos + this.exercit.getBBox().height <= HEIGHT) {
+            newYPos = this.yPos + 1;
         }
-        this.xPos = Math.max(0, Math.min(newXPos, joc.width - this.getAliensWidth()));
-        this.yPos = Math.max(0, Math.min(newYPos, joc.height - this.getAliensHeight()));
+        this.xPos = newXPos, WIDTH - this.getAliensWidth() - 50;
+        this.yPos = newYPos, HEIGHT - this.getAliensHeight();
         this.exercit.setAttribute("transform", `translate(${this.xPos} ${this.yPos})`);
-        this.exercit.style.transition = "transform 0.1s ease-out";
+    }
+    startMoviment() {
+        setInterval(() => {
+            this.aliensMoviment();
+        }, 100);
     }
     getAliensWidth() {
         return this.aliensWidth;
